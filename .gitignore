@@ -261,4 +261,4 @@ __pycache__/
 *.pyc
 ArtefactStore.Test/coveragehistory/
 ArtefactStore.Test/coveragereport/
-
+ArtefactStore.WebApi/artefact-store/
