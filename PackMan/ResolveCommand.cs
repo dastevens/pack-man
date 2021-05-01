@@ -51,7 +51,7 @@ namespace PackMan
 
             var artefact = await artefactStore.GetArtefact(artefactId, cancellationToken);
             resolved = resolved.Append(artefact).ToArray();
-            if (artefact.DependsOn.HasValue)
+            var dependencies = artefact.DependsOn.Select(dependency => Resolve(artefactStore, dependency, ))
             {
                 return await Resolve(artefactStore, artefact.DependsOn.Value, resolved, maxDepth - 1, cancellationToken);
             }

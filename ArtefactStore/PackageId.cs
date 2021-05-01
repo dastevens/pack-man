@@ -2,7 +2,9 @@
 {
     public class PackageId
     {
+        private const string DefaultPackageIdString = "default-package";
         public PackageId()
+            : this(DefaultPackageIdString)
         {
         }
 
@@ -19,7 +21,15 @@
 
         public override bool Equals(object obj)
         {
-            return Id.Equals(obj);
+            var other = obj as PackageId;
+            if (other != null)
+            {
+                return Id.Equals(other.Id);
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public static explicit operator PackageId(string packageId)

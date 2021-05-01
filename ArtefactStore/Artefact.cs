@@ -1,20 +1,41 @@
-﻿namespace ArtefactStore
+﻿using System.Linq;
+
+namespace ArtefactStore
 {
-    public struct Artefact
+    public class Artefact
     {
-        public Artefact(ArtefactId artefactId) : this(artefactId, null)
+        public Artefact()
+            : this(new ArtefactId())
         {
         }
 
-        public Artefact(ArtefactId artefactId, ArtefactId? dependsOn)
+        public Artefact(ArtefactId artefactId, params ArtefactId[] dependsOn)
         {
             ArtefactId = artefactId;
-            DependsOn = dependsOn;
+            DependsOn = dependsOn
+                .Distinct()
+                .OrderBy(d => d.ToString())
+                .ToArray();
         }
 
         public ArtefactId ArtefactId { get; set; }
-        public ArtefactId? DependsOn { get; set; }
+        public ArtefactId[] DependsOn { get; set; }
 
-        public override string ToString() => ArtefactId.ToString();
+        public override int GetHashCode()
+        {
+            return ToString().GetHashCode();
+        }
+
+        public override string ToString() => $"{ArtefactId} => [{string.Join(" ", DependsOn.Select(dependsOn => dependsOn.ToString()))}]";
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as Artefact;
+            if (other != null)
+            {
+                return ToString().Equals(other.ToString());
+            }
+            return false;
+        }
     }
 }

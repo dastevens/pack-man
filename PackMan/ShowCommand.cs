@@ -26,7 +26,7 @@ namespace PackMan
                         Console.WriteLine($"Reading all artefacts for package {packageId}...");
                         var artefacts = await artefactStore.GetArtefacts(packageId, cancellationToken);
                         Console.WriteLine($"Got {artefacts.Length} artefacts");
-                        Console.WriteLine($"{string.Join(Environment.NewLine, artefacts)}");
+                        Console.WriteLine($"{string.Join(Environment.NewLine, artefacts.AsEnumerable())}");
                     }
                     break;
                 case 2:
@@ -39,7 +39,7 @@ namespace PackMan
                         Console.WriteLine($"PackageId : {artefact.ArtefactId.PackageId}");
                         Console.WriteLine($"Version   : {artefact.ArtefactId.Version}");
                         Console.WriteLine($"Depends on:");
-                        Console.WriteLine($"{string.Join(Environment.NewLine, artefact.DependsOn)}");
+                        Console.WriteLine($"{string.Join(Environment.NewLine, artefact.DependsOn.AsEnumerable())}");
                     }
                     break;
                 default:
