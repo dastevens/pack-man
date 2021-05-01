@@ -1,6 +1,6 @@
 # pack-man
 
-A simple package manager that catalogs and installs packages organized into versioned artefacts. Each artefact can have a single dependency.
+A simple package manager that catalogs and installs packages organized into versioned artefacts. Each artefact can have a list of dependencies.
 
 ## Add
 
@@ -26,4 +26,4 @@ List the dependency chain of an artefact.
 
 ## Show
 
-Brose packages and artefacts in the store.
+Browse packages and artefacts in the store.
