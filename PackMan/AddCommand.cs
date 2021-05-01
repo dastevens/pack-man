@@ -44,7 +44,9 @@ namespace PackMan
             {
                 using var stream = File.OpenRead(zipFile);
                 Console.WriteLine($"Creating artefact {artefact}...");
-                await artefactStore.SetArtefact(artefact, stream, cancellationToken);
+                await artefactStore.CreateArtefact(artefact, cancellationToken);
+                Console.WriteLine($"Creating artefact {artefact}...");
+                await artefactStore.SetZipArchive(artefactId, stream, cancellationToken);
             }
             else
             {

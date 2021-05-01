@@ -46,19 +46,19 @@ namespace PackMan
 
             if (resolved.Any(resolvedArtefact => resolvedArtefact.ArtefactId.Equals(artefactId)))
             {
-                throw new Exception($"Failed to resolve artefactId {artefactId}: circular dependencies");
+                // Already resolved this artefactId
+                return resolved;
             }
 
             var artefact = await artefactStore.GetArtefact(artefactId, cancellationToken);
             resolved = resolved.Append(artefact).ToArray();
-            var dependencies = artefact.DependsOn.Select(dependency => Resolve(artefactStore, dependency, ))
+            foreach (var dependsOn in artefact.DependsOn)
             {
-                return await Resolve(artefactStore, artefact.DependsOn.Value, resolved, maxDepth - 1, cancellationToken);
+                var dependencies = await Resolve(artefactStore, dependsOn, resolved, maxDepth - 1, cancellationToken);
+                resolved = resolved.Concat(dependencies).ToArray();
             }
-            else
-            {
-                return resolved;
-            }
+
+            return resolved.Distinct().ToArray();
         }
     }
 }
