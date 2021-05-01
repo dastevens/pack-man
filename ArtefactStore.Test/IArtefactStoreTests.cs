@@ -53,7 +53,7 @@ namespace ArtefactStore.Test
             var sut = CreateArtefactStore();
 
             await sut.CreatePackage(new PackageId(), CancellationToken.None);
-            await Assert.ThrowsAsync<Exception>(async () => await sut.CreatePackage(new PackageId(), CancellationToken.None));
+            await Assert.ThrowsAnyAsync<Exception>(async () => await sut.CreatePackage(new PackageId(), CancellationToken.None));
         }
 
        [Fact]
@@ -75,7 +75,7 @@ namespace ArtefactStore.Test
             var packageId = new PackageId();
             var sut = CreateArtefactStore();
 
-            await Assert.ThrowsAsync<Exception>(async () => await sut.DeletePackage(packageId, CancellationToken.None));
+            await Assert.ThrowsAnyAsync<Exception>(async () => await sut.DeletePackage(packageId, CancellationToken.None));
         }
 
         [Fact]
@@ -105,7 +105,7 @@ namespace ArtefactStore.Test
             var sut = CreateArtefactStore();
 
             await sut.CreateArtefact(artefact, CancellationToken.None);
-            await Assert.ThrowsAsync<Exception>(async () => await sut.CreateArtefact(artefact, CancellationToken.None));
+            await Assert.ThrowsAnyAsync<Exception>(async () => await sut.CreateArtefact(artefact, CancellationToken.None));
         }
 
         [Fact]
@@ -114,7 +114,7 @@ namespace ArtefactStore.Test
             var artefactId = new ArtefactId();
             var sut = CreateArtefactStore();
 
-            await Assert.ThrowsAsync<Exception>(async () => await sut.DeleteArtefact(artefactId, CancellationToken.None));
+            await Assert.ThrowsAnyAsync<Exception>(async () => await sut.DeleteArtefact(artefactId, CancellationToken.None));
         }
 
         [Fact]
