@@ -27,16 +27,36 @@ namespace PackMan
             {
                 if (args.Length == 0)
                 {
-                    throw new SyntaxErrorException($"Try {string.Join(", ", commands.Keys)}");
+                    throw new SyntaxErrorException($"Try <store> then {string.Join(", ", commands.Keys)}");
                 }
 
-                var command = args[0];
-                var commandArgs = args.Skip(1).ToArray();
+                var store = args[0];
+                var command = args[1];
+                var commandArgs = args.Skip(2).ToArray();
 
                 var cancellationToken = CancellationToken.None;
-                var artefactStorePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), nameof(PackMan));
-                Directory.CreateDirectory(artefactStorePath);
-                var artefactStore = new FileArtefactStore(artefactStorePath);
+
+                IArtefactStore artefactStore;
+                if (store.StartsWith("http"))
+                {
+#if DEBUG
+                    var handler = new System.Net.Http.HttpClientHandler();
+                    handler.ClientCertificateOptions = System.Net.Http.ClientCertificateOption.Manual;
+                    handler.ServerCertificateCustomValidationCallback = 
+                        (httpRequestMessage, cert, cetChain, policyErrors) =>
+                    {
+                        return true;
+                    };
+                    var httpClient = new System.Net.Http.HttpClient(handler);
+#else
+                    var httpClient = new System.Net.Http.HttpClient();
+#endif
+                    artefactStore = new WebApiArtefactStore(store, httpClient);
+                }
+                else
+                {
+                    artefactStore = new FileArtefactStore(store);
+                }
 
                 if (commands.TryGetValue(command, out var cmd))
                 {
@@ -44,7 +64,7 @@ namespace PackMan
                 }
                 else
                 {
-                    throw new SyntaxErrorException($"Unknown command {command}. Try {string.Join(", ", commands.Keys)}");
+                    throw new SyntaxErrorException($"Unknown command {command}. Try <store> then {string.Join(", ", commands.Keys)}");
                 }
             }
             catch (SyntaxErrorException e)
