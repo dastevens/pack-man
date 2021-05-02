@@ -9,23 +9,24 @@
 
         public ArtefactId(PackageId packageId, SemanticVersion version)
         {
-            PackageId = packageId;
-            Version = version;
+            this.PackageId = packageId;
+            this.Version = version;
         }
 
         public PackageId PackageId { get; set; }
+
         public SemanticVersion Version { get; set; }
 
-        public override int GetHashCode() => ToString().GetHashCode();
+        public override int GetHashCode() => this.ToString().GetHashCode();
 
-        public override string ToString() => $"{PackageId}.{Version}";
+        public override string ToString() => $"{this.PackageId}.{this.Version}";
 
         public override bool Equals(object obj)
         {
             if (obj is ArtefactId other)
             {
-                return PackageId.Equals(other.PackageId)
-                    && Version.Equals(other.Version);
+                return this.PackageId.Equals(other.PackageId)
+                    && this.Version.Equals(other.Version);
             }
             else
             {

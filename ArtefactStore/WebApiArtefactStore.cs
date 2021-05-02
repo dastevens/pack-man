@@ -1,12 +1,12 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace ArtefactStore
+﻿namespace ArtefactStore
 {
+    using System;
+    using System.IO;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public class WebApiArtefactStore : IArtefactStore
     {
         private readonly ArtefactStore.WebApiClient.Client apiClient;
@@ -144,7 +144,7 @@ namespace ArtefactStore
             {
                 // Use httpclient as streams are fiddly with swagger
                 var response = await this.httpClient.GetAsync(
-                    ZipArchiveUrl(artefactId),
+                    ZipArchiveUrl(this.baseUrl, artefactId),
                     cancellationToken);
                 return await response.Content.ReadAsStreamAsync();
             }
@@ -160,7 +160,7 @@ namespace ArtefactStore
             {
                 // Use httpclient as streams are fiddly with swagger
                 await this.httpClient.PostAsync(
-                    ZipArchiveUrl(artefactId),
+                    ZipArchiveUrl(this.baseUrl, artefactId),
                     new StreamContent(zipArchive),
                     cancellationToken);
             }
@@ -170,9 +170,9 @@ namespace ArtefactStore
             }
         }
 
-        private string ZipArchiveUrl(ArtefactId artefactId)
+        private static string ZipArchiveUrl(string baseUrl, ArtefactId artefactId)
         {
-            return $"{this.baseUrl}/ZipArchive/"
+            return $"{baseUrl}/ZipArchive/"
                 + System.Uri.EscapeDataString(artefactId.PackageId.Id)
                 + "/"
                 + System.Uri.EscapeDataString(artefactId.Version.Version);

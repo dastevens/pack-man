@@ -1,9 +1,9 @@
-﻿using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace ArtefactStore
+﻿namespace ArtefactStore
 {
+    using System.IO;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public interface IArtefactStore
     {
         Task CreatePackage(PackageId packageId, CancellationToken cancellationToken);

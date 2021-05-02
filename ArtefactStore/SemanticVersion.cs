@@ -1,8 +1,8 @@
-﻿using System;
-using Semver;
-
-namespace ArtefactStore
+﻿namespace ArtefactStore
 {
+    using System;
+    using Semver;
+
     public class SemanticVersion : IComparable<SemanticVersion>
     {
         private const string DefaultVersionString = "0.1.0";
@@ -10,12 +10,12 @@ namespace ArtefactStore
 
         public SemanticVersion()
         {
-            Version = DefaultVersionString;
+            this.Version = DefaultVersionString;
         }
 
         public SemanticVersion(string versionString)
         {
-            Version = versionString;
+            this.Version = versionString;
         }
 
         private SemanticVersion(SemVersion semVersion)
@@ -27,12 +27,18 @@ namespace ArtefactStore
         {
             get
             {
-                return semVersion.ToString();
+                return this.semVersion.ToString();
             }
+
             set
             {
-                semVersion = SemVersion.Parse(value);
+                this.semVersion = SemVersion.Parse(value);
             }
+        }
+
+        public static explicit operator SemanticVersion(string semanticVersion)
+        {
+            return new SemanticVersion(semanticVersion);
         }
 
         public static bool TryParse(string version, out SemanticVersion result)
@@ -49,18 +55,18 @@ namespace ArtefactStore
             }
         }
 
-        public override string ToString() => Version;
+        public override string ToString() => this.Version;
 
         public int CompareTo(SemanticVersion other)
         {
-            return semVersion.CompareTo(other.semVersion);
+            return this.semVersion.CompareTo(other.semVersion);
         }
 
         public override bool Equals(object obj)
         {
             if (obj is SemanticVersion other)
             {
-                return semVersion.Equals(other.semVersion);
+                return this.semVersion.Equals(other.semVersion);
             }
             else
             {
@@ -70,12 +76,7 @@ namespace ArtefactStore
 
         public override int GetHashCode()
         {
-            return semVersion.GetHashCode();
-        }
-
-        public static explicit operator SemanticVersion(string semanticVersion)
-        {
-            return new SemanticVersion(semanticVersion);
+            return this.semVersion.GetHashCode();
         }
     }
 }

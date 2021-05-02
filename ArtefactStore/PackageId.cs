@@ -3,6 +3,7 @@
     public class PackageId
     {
         private const string DefaultPackageIdString = "default-package";
+
         public PackageId()
             : this(DefaultPackageIdString)
         {
@@ -10,31 +11,31 @@
 
         public PackageId(string packageId)
         {
-            Id = packageId;
+            this.Id = packageId;
         }
 
         public string Id { get; set; }
 
-        public override int GetHashCode() => Id.GetHashCode();
+        public static explicit operator PackageId(string packageId)
+        {
+            return new PackageId(packageId);
+        }
 
-        public override string ToString() => Id;
+        public override int GetHashCode() => this.Id.GetHashCode();
+
+        public override string ToString() => this.Id;
 
         public override bool Equals(object obj)
         {
             var other = obj as PackageId;
             if (other != null)
             {
-                return Id.Equals(other.Id);
+                return this.Id.Equals(other.Id);
             }
             else
             {
                 return false;
             }
-        }
-
-        public static explicit operator PackageId(string packageId)
-        {
-            return new PackageId(packageId);
         }
     }
 }
