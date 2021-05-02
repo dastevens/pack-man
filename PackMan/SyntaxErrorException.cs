@@ -1,10 +1,11 @@
-﻿using System;
-
-namespace PackMan
+﻿namespace PackMan
 {
+    using System;
+
     public class SyntaxErrorException : Exception
     {
-        public SyntaxErrorException(string message) : base(message)
+        public SyntaxErrorException(string message)
+            : base(message)
         {
         }
     }

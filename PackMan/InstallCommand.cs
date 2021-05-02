@@ -1,14 +1,12 @@
-﻿using ArtefactStore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace PackMan
+﻿namespace PackMan
 {
-    class InstallCommand : ICommand
+    using System;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using ArtefactStore;
+
+    internal class InstallCommand : ICommand
     {
         public async Task Run(IArtefactStore artefactStore, string[] commandArgs, CancellationToken cancellationToken)
         {
@@ -29,6 +27,7 @@ namespace PackMan
                         Console.WriteLine($"Extracting artefact {artefactId} to {destinationFolder}...");
                         await ExtractCommand.Extract(artefactStore, dependency.ArtefactId, destinationFolder, cancellationToken);
                     }
+
                     break;
                 default:
                     throw new SyntaxErrorException("extract <packageId> <version> <folder>");

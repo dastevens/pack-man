@@ -1,14 +1,14 @@
-﻿using ArtefactStore;
-using System;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace PackMan
+﻿namespace PackMan
 {
-    public class AddCommand : ICommand
+    using System;
+    using System.IO;
+    using System.IO.Compression;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using ArtefactStore;
+
+    internal class AddCommand : ICommand
     {
         public async Task Run(IArtefactStore artefactStore, string[] commandArgs, CancellationToken cancellationToken)
         {

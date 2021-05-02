@@ -1,33 +1,29 @@
-﻿using ArtefactStore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace PackMan
+﻿namespace PackMan
 {
-    class ResolveCommand : ICommand
+    using System;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using ArtefactStore;
+
+    internal class ResolveCommand : ICommand
     {
         public async Task Run(IArtefactStore artefactStore, string[] commandArgs, CancellationToken cancellationToken)
         {
             switch (commandArgs.Length)
             {
                 case 2:
-                    {
-                        var packageId = new PackageId(commandArgs[0]);
-                        var version = new SemanticVersion(commandArgs[1]);
-                        var artefactId = new ArtefactId(packageId, version);
-                        Console.WriteLine($"Resolving artefact {artefactId}...");
+                    var packageId = new PackageId(commandArgs[0]);
+                    var version = new SemanticVersion(commandArgs[1]);
+                    var artefactId = new ArtefactId(packageId, version);
+                    Console.WriteLine($"Resolving artefact {artefactId}...");
 
-                        var dependencies = await Resolve(artefactStore, artefactId, cancellationToken);
+                    var dependencies = await Resolve(artefactStore, artefactId, cancellationToken);
 
-                        // Print out its dependency chain
-                        dependencies
-                            .ToList()
-                            .ForEach(dependency => Console.WriteLine($"{dependency}"));
-                    }
+                    // Print out its dependency chain
+                    dependencies
+                        .ToList()
+                        .ForEach(dependency => Console.WriteLine($"{dependency}"));
                     break;
                 default:
                     throw new SyntaxErrorException("install <packageId> <version> <folder>");
@@ -37,7 +33,7 @@ namespace PackMan
         internal static Task<Artefact[]> Resolve(IArtefactStore artefactStore, ArtefactId artefactId, CancellationToken cancellationToken)
             => Resolve(artefactStore, artefactId, Array.Empty<Artefact>(), maxDepth: 100, cancellationToken);
 
-        static async Task<Artefact[]> Resolve(IArtefactStore artefactStore, ArtefactId artefactId, Artefact[] resolved, int maxDepth, CancellationToken cancellationToken)
+        private static async Task<Artefact[]> Resolve(IArtefactStore artefactStore, ArtefactId artefactId, Artefact[] resolved, int maxDepth, CancellationToken cancellationToken)
         {
             if (maxDepth <= 0)
             {

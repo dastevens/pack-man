@@ -1,13 +1,11 @@
-﻿using ArtefactStore;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace PackMan
+﻿namespace PackMan
 {
-    class RemoveCommand : ICommand
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using ArtefactStore;
+
+    internal class RemoveCommand : ICommand
     {
         public async Task Run(IArtefactStore artefactStore, string[] commandArgs, CancellationToken cancellationToken)
         {
@@ -15,6 +13,7 @@ namespace PackMan
             {
                 throw new SyntaxErrorException("remove <packageId> <version>");
             }
+
             var packageId = new PackageId(commandArgs[0]);
             var version = new SemanticVersion(commandArgs[1]);
             var artefactId = new ArtefactId(packageId, version);

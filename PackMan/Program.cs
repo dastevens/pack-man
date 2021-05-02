@@ -1,17 +1,15 @@
-﻿using ArtefactStore;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace PackMan
+﻿namespace PackMan
 {
-    class Program
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using ArtefactStore;
+
+    internal class Program
     {
-        private static readonly Dictionary<string, Func<ICommand>> commands = new Dictionary<string, Func<ICommand>>(StringComparer.CurrentCultureIgnoreCase)
+        private static readonly Dictionary<string, Func<ICommand>> Commands = new Dictionary<string, Func<ICommand>>(StringComparer.CurrentCultureIgnoreCase)
         {
             ["add"] = () => new AddCommand(),
             ["extract"] = () => new ExtractCommand(),
@@ -21,13 +19,13 @@ namespace PackMan
             ["show"] = () => new ShowCommand(),
         };
 
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             try
             {
                 if (args.Length == 0)
                 {
-                    throw new SyntaxErrorException($"Try <store> then {string.Join(", ", commands.Keys)}");
+                    throw new SyntaxErrorException($"Try <store> then {string.Join(", ", Commands.Keys)}");
                 }
 
                 var store = args[0];
@@ -42,7 +40,7 @@ namespace PackMan
 #if DEBUG
                     var handler = new System.Net.Http.HttpClientHandler();
                     handler.ClientCertificateOptions = System.Net.Http.ClientCertificateOption.Manual;
-                    handler.ServerCertificateCustomValidationCallback = 
+                    handler.ServerCertificateCustomValidationCallback =
                         (httpRequestMessage, cert, cetChain, policyErrors) =>
                     {
                         return true;
@@ -58,13 +56,13 @@ namespace PackMan
                     artefactStore = new FileArtefactStore(store);
                 }
 
-                if (commands.TryGetValue(command, out var cmd))
+                if (Commands.TryGetValue(command, out var cmd))
                 {
                     await cmd().Run(artefactStore, commandArgs, cancellationToken);
                 }
                 else
                 {
-                    throw new SyntaxErrorException($"Unknown command {command}. Try <store> then {string.Join(", ", commands.Keys)}");
+                    throw new SyntaxErrorException($"Unknown command {command}. Try <store> then {string.Join(", ", Commands.Keys)}");
                 }
             }
             catch (SyntaxErrorException e)

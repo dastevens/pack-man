@@ -1,12 +1,12 @@
-﻿using ArtefactStore;
-using System;
-using System.IO.Compression;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace PackMan
+﻿namespace PackMan
 {
-    class ExtractCommand : ICommand
+    using System;
+    using System.IO.Compression;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using ArtefactStore;
+
+    internal class ExtractCommand : ICommand
     {
         public async Task Run(IArtefactStore artefactStore, string[] commandArgs, CancellationToken cancellationToken)
         {
@@ -28,10 +28,12 @@ namespace PackMan
         internal static async Task Extract(IArtefactStore artefactStore, ArtefactId artefactId, string destinationFolder, CancellationToken cancellationToken)
         {
             using var stream = await artefactStore.GetZipArchive(artefactId, cancellationToken);
-            await Task.Run(() =>
-            {
-                new ZipArchive(stream, ZipArchiveMode.Read).ExtractToDirectory(destinationFolder, true);
-            }, cancellationToken);
+            await Task.Run(
+                () =>
+                {
+                    new ZipArchive(stream, ZipArchiveMode.Read).ExtractToDirectory(destinationFolder, true);
+                },
+                cancellationToken);
         }
     }
 }
