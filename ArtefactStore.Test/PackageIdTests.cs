@@ -1,17 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
-using Xunit.Extensions;
-using Xunit.Sdk;
-
 namespace ArtefactStore.Test
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Xunit;
+
     public class PackageIdTests
     {
         public static string[] PackageIdStrings => new[]
         {
-            "",
+            string.Empty,
             "a package",
             "My.Package",
         };
@@ -66,6 +64,5 @@ namespace ArtefactStore.Test
 
             Assert.Equal(packageId, sut.Id);
         }
-
     }
 }

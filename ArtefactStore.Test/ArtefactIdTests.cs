@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
-using Xunit.Extensions;
-using Xunit.Sdk;
-
 namespace ArtefactStore.Test
 {
+    using Xunit;
+
     public class ArtefactIdTests
     {
         [Fact]

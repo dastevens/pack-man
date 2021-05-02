@@ -1,22 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
-using Xunit.Extensions;
-using Xunit.Sdk;
-
 namespace ArtefactStore.Test
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Xunit;
+    using Xunit.Sdk;
+
     public class SemanticVersionTests
     {
-        [Fact]
-        public void DefaultConstructor()
-        {
-            var sut = new SemanticVersion();
-
-            Assert.Equal("0.1.0", sut.Version);
-        }
-
         public static string[] ValidVersionStrings => new[]
         {
             "1.0.0-0.3.7",
@@ -32,7 +23,7 @@ namespace ArtefactStore.Test
 
         public static string[] InvalidVersionStrings => new[]
         {
-            "invalid"
+            "invalid",
         };
 
         public static string[] UnsupportedVersionStrings => new[]
@@ -41,7 +32,7 @@ namespace ArtefactStore.Test
             "1.0.0+21AF26D3—-117B344092BD",
         };
 
-        public static IEnumerable<object[]> InvalidVersions => 
+        public static IEnumerable<object[]> InvalidVersions =>
             InvalidVersionStrings
                 .Concat(UnsupportedVersionStrings)
                 .Select(versionString => new object[] { versionString });
@@ -62,12 +53,12 @@ namespace ArtefactStore.Test
             "1.0.0",
             "1.9.0",
             "1.10.0",
-            "1.11.0"
+            "1.11.0",
         };
 
         public static IEnumerable<object[]> OrderedVersions
         {
-            get 
+            get
             {
                 for (var i = 0; i < OrderedVersionStrings.Length; i++)
                 {
@@ -77,6 +68,14 @@ namespace ArtefactStore.Test
                     }
                 }
             }
+        }
+
+        [Fact]
+        public void DefaultConstructor()
+        {
+            var sut = new SemanticVersion();
+
+            Assert.Equal("0.1.0", sut.Version);
         }
 
         [Theory]

@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.IO.Abstractions.TestingHelpers;
-using System.Linq;
-using Xunit;
-using Xunit.Extensions;
-using Xunit.Sdk;
-
 namespace ArtefactStore.Test
 {
+    using System.IO.Abstractions.TestingHelpers;
+
     public static class MockFileArtefactStore
     {
         public static FileArtefactStore Create()
