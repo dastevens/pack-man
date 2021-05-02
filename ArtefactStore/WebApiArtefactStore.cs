@@ -1,8 +1,7 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.IO;
-using System.IO.Abstractions;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,17 +10,21 @@ namespace ArtefactStore
     public class WebApiArtefactStore : IArtefactStore
     {
         private readonly ArtefactStore.WebApiClient.Client apiClient;
+        private readonly System.Net.Http.HttpClient httpClient;
+        private readonly string baseUrl;
 
         public WebApiArtefactStore(string baseUrl, System.Net.Http.HttpClient httpClient)
         {
             this.apiClient = new WebApiClient.Client(baseUrl, httpClient);
+            this.httpClient = httpClient;
+            this.baseUrl = baseUrl;
         }
 
         public Task CreatePackage(PackageId packageId, CancellationToken cancellationToken)
         {
             try
             {
-                return this.apiClient.PackageAsync(
+                return this.apiClient.CreatePackageAsync(
                     packageId.Id,
                     cancellationToken);
             }
@@ -35,7 +38,7 @@ namespace ArtefactStore
         {
             try
             {
-                return this.apiClient.Package2Async(
+                return this.apiClient.DeletePackageAsync(
                     packageId.Id,
                     cancellationToken);
             }
@@ -49,7 +52,7 @@ namespace ArtefactStore
         {
             try
             {
-                return this.apiClient.Artefact2Async(
+                return this.apiClient.CreateArtefactAsync(
                     artefact.ArtefactId.PackageId.Id,
                     artefact.ArtefactId.Version.Version,
                     artefact.DependsOn.Select(Convert),
@@ -65,7 +68,7 @@ namespace ArtefactStore
         {
             try
             {
-                return this.apiClient.Artefact3Async(
+                return this.apiClient.DeleteArtefactAsync(
                     artefactId.PackageId.Id,
                     artefactId.Version.Version,
                     cancellationToken);
@@ -80,7 +83,7 @@ namespace ArtefactStore
         {
             try
             {
-                var apiArtefact = await this.apiClient.ArtefactAsync(
+                var apiArtefact = await this.apiClient.GetArtefactAsync(
                     artefactId.PackageId.Id,
                     artefactId.Version.Version,
                     cancellationToken);
@@ -96,7 +99,7 @@ namespace ArtefactStore
         {
             try
             {
-                var apiArtefacts = await this.apiClient.ArtefactsAsync(
+                var apiArtefacts = await this.apiClient.GetArtefactsAsync(
                     packageId.Id,
                     cancellationToken);
                 return apiArtefacts.Select(Convert).ToArray();
@@ -111,7 +114,7 @@ namespace ArtefactStore
         {
             try
             {
-                var apiArtefact = await this.apiClient.LatestArtefactAsync(
+                var apiArtefact = await this.apiClient.GetLatestArtefactAsync(
                     packageId.Id,
                     cancellationToken);
                 return Convert(apiArtefact);
@@ -126,7 +129,7 @@ namespace ArtefactStore
         {
             try
             {
-                var packages = await this.apiClient.PackagesAsync(cancellationToken);
+                var packages = await this.apiClient.GetPackagesAsync(cancellationToken);
                 return packages.Select(package => new PackageId(package.Id)).ToArray();
             }
             catch (Exception e)
@@ -135,11 +138,15 @@ namespace ArtefactStore
             }
         }
 
-        public Stream GetZipArchive(ArtefactId artefactId, CancellationToken cancellationToken)
+        public async Task<Stream> GetZipArchive(ArtefactId artefactId, CancellationToken cancellationToken)
         {
             try
             {
-                throw new NotImplementedException();
+                // Use httpclient as streams are fiddly with swagger
+                var response = await this.httpClient.GetAsync(
+                    ZipArchiveUrl(artefactId),
+                    cancellationToken);
+                return await response.Content.ReadAsStreamAsync();
             }
             catch (Exception e)
             {
@@ -147,20 +154,28 @@ namespace ArtefactStore
             }
         }
 
-        public Task SetZipArchive(ArtefactId artefactId, Stream zipArchive, CancellationToken cancellationToken)
+        public async Task SetZipArchive(ArtefactId artefactId, Stream zipArchive, CancellationToken cancellationToken)
         {
             try
             {
-                return this.apiClient.ZipArchive2Async(
-                    artefactId.PackageId.Id,
-                    artefactId.Version.Version,
-                    zipArchive,
+                // Use httpclient as streams are fiddly with swagger
+                await this.httpClient.PostAsync(
+                    ZipArchiveUrl(artefactId),
+                    new StreamContent(zipArchive),
                     cancellationToken);
             }
             catch (Exception e)
             {
                 throw new Exception($"Failed to set zip archive for artefact {artefactId}", e);
             }
+        }
+
+        private string ZipArchiveUrl(ArtefactId artefactId)
+        {
+            return $"{this.baseUrl}/ZipArchive/"
+                + System.Uri.EscapeDataString(artefactId.PackageId.Id)
+                + "/"
+                + System.Uri.EscapeDataString(artefactId.Version.Version);
         }
 
         private static WebApiClient.ArtefactId Convert(ArtefactId artefactId)

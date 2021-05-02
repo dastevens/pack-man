@@ -145,7 +145,7 @@ namespace ArtefactStore.Test
 
             await sut.CreateArtefact(artefact, CancellationToken.None);
             await sut.SetZipArchive(artefact.ArtefactId, Stream.Null, CancellationToken.None);
-            using var stream = sut.GetZipArchive(artefact.ArtefactId, CancellationToken.None);
+            using var stream = await sut.GetZipArchive(artefact.ArtefactId, CancellationToken.None);
             Assert.NotNull(stream);
         }
     }

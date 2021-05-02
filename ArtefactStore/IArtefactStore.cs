@@ -22,7 +22,7 @@ namespace ArtefactStore
 
         Task DeleteArtefact(ArtefactId artefactId, CancellationToken cancellationToken);
 
-        Stream GetZipArchive(ArtefactId artefactId, CancellationToken cancellationToken);
+        Task<Stream> GetZipArchive(ArtefactId artefactId, CancellationToken cancellationToken);
 
         Task SetZipArchive(ArtefactId artefactId, Stream zipArchive, CancellationToken cancellationToken);
     }

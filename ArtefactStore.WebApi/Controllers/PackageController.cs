@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace ArtefactStore.WebApi.Controllers
 {
@@ -23,6 +24,7 @@ namespace ArtefactStore.WebApi.Controllers
 
         [HttpPost]
         [Route("Package/{packageId}")]
+        [SwaggerOperation(OperationId = nameof(CreatePackage))]
         public Task CreatePackage(string packageId, CancellationToken cancellationToken)
         {
             return this.artefactStore.CreatePackage(
@@ -32,6 +34,7 @@ namespace ArtefactStore.WebApi.Controllers
 
         [HttpDelete]
         [Route("Package/{packageId}")]
+        [SwaggerOperation(OperationId = nameof(DeletePackage))]
         public Task DeletePackage(string packageId, CancellationToken cancellationToken)
         {
             return this.artefactStore.DeletePackage(
@@ -41,6 +44,7 @@ namespace ArtefactStore.WebApi.Controllers
 
         [HttpGet]
         [Route("Packages")]
+        [SwaggerOperation(OperationId = nameof(GetPackages))]
         public Task<PackageId[]> GetPackages(CancellationToken cancellationToken)
         {
             return artefactStore.GetPackages(cancellationToken);

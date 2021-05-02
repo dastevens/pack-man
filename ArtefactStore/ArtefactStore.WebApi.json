@@ -10,14 +10,14 @@
         "tags": [
           "Artefact"
         ],
+        "operationId": "GetArtefact",
         "parameters": [
           {
             "name": "packageId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             }
           },
           {
@@ -25,8 +25,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             }
           }
         ],
@@ -57,14 +56,14 @@
         "tags": [
           "Artefact"
         ],
+        "operationId": "CreateArtefact",
         "parameters": [
           {
             "name": "packageId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             }
           },
           {
@@ -72,8 +71,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             }
           }
         ],
@@ -84,8 +82,7 @@
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/ArtefactId"
-                },
-                "nullable": true
+                }
               }
             },
             "text/json": {
@@ -93,8 +90,7 @@
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/ArtefactId"
-                },
-                "nullable": true
+                }
               }
             },
             "application/*+json": {
@@ -102,8 +98,7 @@
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/ArtefactId"
-                },
-                "nullable": true
+                }
               }
             }
           }
@@ -118,14 +113,14 @@
         "tags": [
           "Artefact"
         ],
+        "operationId": "DeleteArtefact",
         "parameters": [
           {
             "name": "packageId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             }
           },
           {
@@ -133,8 +128,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             }
           }
         ],
@@ -150,14 +144,14 @@
         "tags": [
           "Artefact"
         ],
+        "operationId": "GetArtefacts",
         "parameters": [
           {
             "name": "packageId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             }
           }
         ],
@@ -199,14 +193,14 @@
         "tags": [
           "Artefact"
         ],
+        "operationId": "GetLatestArtefact",
         "parameters": [
           {
             "name": "packageId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             }
           }
         ],
@@ -239,14 +233,14 @@
         "tags": [
           "Artefact"
         ],
+        "operationId": "GetZipArchive",
         "parameters": [
           {
             "name": "packageId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             }
           },
           {
@@ -254,14 +248,21 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "application/zip": {
+                "schema": {
+                  "type": "file",
+                  "format": "binary"
+                }
+              }
+            }
           }
         }
       },
@@ -269,14 +270,14 @@
         "tags": [
           "Artefact"
         ],
+        "operationId": "SetZipArchive",
         "parameters": [
           {
             "name": "packageId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             }
           },
           {
@@ -284,8 +285,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             }
           }
         ],
@@ -299,7 +299,7 @@
                 "type": "object",
                 "properties": {
                   "zipArchive": {
-                    "type": "string",
+                    "type": "file",
                     "format": "binary"
                   }
                 }
@@ -324,14 +324,14 @@
         "tags": [
           "Package"
         ],
+        "operationId": "CreatePackage",
         "parameters": [
           {
             "name": "packageId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             }
           }
         ],
@@ -345,14 +345,14 @@
         "tags": [
           "Package"
         ],
+        "operationId": "DeletePackage",
         "parameters": [
           {
             "name": "packageId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "nullable": true
+              "type": "string"
             }
           }
         ],
@@ -368,6 +368,7 @@
         "tags": [
           "Package"
         ],
+        "operationId": "GetPackages",
         "responses": {
           "200": {
             "description": "Success",
@@ -404,21 +405,17 @@
   },
   "components": {
     "schemas": {
-      "PackageId": {
+      "Artefact": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "SemanticVersion": {
-        "type": "object",
-        "properties": {
-          "version": {
-            "type": "string",
+          "artefactId": {
+            "$ref": "#/components/schemas/ArtefactId"
+          },
+          "dependsOn": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ArtefactId"
+            },
             "nullable": true
           }
         },
@@ -436,17 +433,21 @@
         },
         "additionalProperties": false
       },
-      "Artefact": {
+      "PackageId": {
         "type": "object",
         "properties": {
-          "artefactId": {
-            "$ref": "#/components/schemas/ArtefactId"
-          },
-          "dependsOn": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ArtefactId"
-            },
+          "id": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SemanticVersion": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string",
             "nullable": true
           }
         },

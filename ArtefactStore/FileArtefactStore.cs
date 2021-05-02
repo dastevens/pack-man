@@ -142,9 +142,9 @@ namespace ArtefactStore
             return Task.Run(() => PackageFolders().Select(packageFolder => new PackageId(packageFolder)).ToArray());
         }
 
-        public Stream GetZipArchive(ArtefactId artefactId, CancellationToken cancellationToken)
+        public Task<Stream> GetZipArchive(ArtefactId artefactId, CancellationToken cancellationToken)
         {
-            return this.fileSystem.File.OpenRead(ZipArchiveFile(artefactId));
+            return Task.Run(() => this.fileSystem.File.OpenRead(ZipArchiveFile(artefactId)));
         }
 
         public Task SetZipArchive(ArtefactId artefactId, Stream zipArchive, CancellationToken cancellationToken)

@@ -6,10 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace ArtefactStore.WebApi.Controllers
 {
-    [ApiController]
     public class ArtefactController : ControllerBase
     {
         private readonly ILogger<ArtefactController> logger;
@@ -23,6 +23,7 @@ namespace ArtefactStore.WebApi.Controllers
 
         [HttpGet]
         [Route("Artefact/{packageId}/{version}")]
+        [SwaggerOperation(OperationId = nameof(GetArtefact))]
         public Task<Artefact> GetArtefact(string packageId, string version, CancellationToken cancellationToken)
         {
             var artefactId = new ArtefactId(new PackageId(packageId), new SemanticVersion(version));
@@ -31,6 +32,7 @@ namespace ArtefactStore.WebApi.Controllers
 
         [HttpGet]
         [Route("Artefacts/{packageId}")]
+        [SwaggerOperation(OperationId = nameof(GetArtefacts))]
         public Task<Artefact[]> GetArtefacts(string packageId, CancellationToken cancellationToken)
         {
             return this.artefactStore.GetArtefacts(
@@ -40,6 +42,7 @@ namespace ArtefactStore.WebApi.Controllers
 
         [HttpGet]
         [Route("LatestArtefact/{packageId}")]
+        [SwaggerOperation(OperationId = nameof(GetLatestArtefact))]
         public Task<Artefact> GetLatestArtefact(string packageId, CancellationToken cancellationToken)
         {
             return this.artefactStore.GetLatestArtefact(
@@ -49,6 +52,7 @@ namespace ArtefactStore.WebApi.Controllers
 
         [HttpPost]
         [Route("Artefact/{packageId}/{version}")]
+        [SwaggerOperation(OperationId = nameof(CreateArtefact))]
         public Task CreateArtefact(string packageId, string version, ArtefactId[] dependsOn, CancellationToken cancellationToken)
         {
             var artefactId = new ArtefactId(
@@ -60,40 +64,9 @@ namespace ArtefactStore.WebApi.Controllers
                 cancellationToken);
         }
 
-        [HttpGet]
-        [Route("ZipArchive/{packageId}/{version}")]
-        public IActionResult GetZipArchive(string packageId, string version, CancellationToken cancellationToken)
-        {
-            var artefactId = new ArtefactId(
-                new PackageId(packageId),
-                new SemanticVersion(version));
-            var zipArchive = this.artefactStore.GetZipArchive(
-                artefactId,
-                cancellationToken);
-            return File(zipArchive, "application/zip", $"{artefactId}.zip");
-        }
-
-        [HttpPost]
-        [Route("ZipArchive/{packageId}/{version}")]
-        public async Task SetZipArchive(string packageId, string version, [System.ComponentModel.DataAnnotations.Required] Microsoft.AspNetCore.Http.IFormFile zipArchive, CancellationToken cancellationToken)
-        {
-            if (!zipArchive.ContentType.Equals("application/zip", StringComparison.InvariantCultureIgnoreCase))
-            {
-                throw new Exception($"Bad content type: {Request.ContentType}, expecting application/zip");
-            }
-
-            var artefactId = new ArtefactId(
-                new PackageId(packageId),
-                new SemanticVersion(version));
-            using var stream = zipArchive.OpenReadStream();
-            await this.artefactStore.SetZipArchive(
-                artefactId,
-                stream,
-                cancellationToken);
-        }
-
         [HttpDelete]
         [Route("Artefact/{packageId}/{version}")]
+        [SwaggerOperation(OperationId = nameof(DeleteArtefact))]
         public Task DeleteArtefact(string packageId, string version, CancellationToken cancellationToken)
         {
             var artefactId = new ArtefactId(
