@@ -262,3 +262,4 @@ __pycache__/
 ArtefactStore.Test/coveragehistory/
 ArtefactStore.Test/coveragereport/
 ArtefactStore.WebApi/artefact-store/
+.vscode/
