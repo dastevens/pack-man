@@ -27,7 +27,7 @@ namespace PackMan
 
         internal static async Task Extract(IArtefactStore artefactStore, ArtefactId artefactId, string destinationFolder, CancellationToken cancellationToken)
         {
-            using var stream = artefactStore.GetZipArchive(artefactId, cancellationToken);
+            using var stream = await artefactStore.GetZipArchive(artefactId, cancellationToken);
             await Task.Run(() =>
             {
                 new ZipArchive(stream, ZipArchiveMode.Read).ExtractToDirectory(destinationFolder, true);
