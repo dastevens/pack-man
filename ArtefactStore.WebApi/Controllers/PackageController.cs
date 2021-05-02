@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Swashbuckle.AspNetCore.Annotations;
-
-namespace ArtefactStore.WebApi.Controllers
+﻿namespace ArtefactStore.WebApi.Controllers
 {
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
+    using Swashbuckle.AspNetCore.Annotations;
+
     [ApiController]
     public class PackageController : ControllerBase
     {
@@ -47,7 +43,7 @@ namespace ArtefactStore.WebApi.Controllers
         [SwaggerOperation(OperationId = nameof(GetPackages))]
         public Task<PackageId[]> GetPackages(CancellationToken cancellationToken)
         {
-            return artefactStore.GetPackages(cancellationToken);
+            return this.artefactStore.GetPackages(cancellationToken);
         }
     }
 }

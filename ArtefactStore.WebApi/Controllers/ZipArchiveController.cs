@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Swashbuckle.AspNetCore.Annotations;
-
-namespace ArtefactStore.WebApi.Controllers
+﻿namespace ArtefactStore.WebApi.Controllers
 {
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
+    using Swashbuckle.AspNetCore.Annotations;
+
     [ApiController]
     public class ZipArchiveController : ControllerBase
     {
@@ -36,7 +33,7 @@ namespace ArtefactStore.WebApi.Controllers
             var zipArchive = await this.artefactStore.GetZipArchive(
                 artefactId,
                 cancellationToken);
-            return File(zipArchive, "application/zip", $"{artefactId}.zip");
+            return this.File(zipArchive, "application/zip", $"{artefactId}.zip");
         }
 
         [HttpPost]
@@ -52,7 +49,7 @@ namespace ArtefactStore.WebApi.Controllers
         {
             if (!zipArchive.ContentType.Equals("application/zip", StringComparison.InvariantCultureIgnoreCase))
             {
-                throw new Exception($"Bad content type: {Request.ContentType}, expecting application/zip");
+                throw new Exception($"Bad content type: {this.Request.ContentType}, expecting application/zip");
             }
 
             var artefactId = new ArtefactId(
